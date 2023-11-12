@@ -2,14 +2,15 @@ name: Make & release GeoJSON
 
 on:
   push:
-#    branches:
-#      - master
+    branches:
+      - master
+      - dev-cicd
 
 jobs:
   do-tests:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     concurrency:
       group: cicd-tests
     steps:
