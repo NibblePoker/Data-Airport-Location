@@ -1,0 +1,3 @@
+[submodule "data/mwgg/Airports"]
+	path = data/mwgg/Airports
+	url = https://github.com/mwgg/Airports.git
