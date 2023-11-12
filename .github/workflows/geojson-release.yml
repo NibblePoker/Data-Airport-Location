@@ -22,7 +22,12 @@ jobs:
           python-version: '3.10'
 
       - name: Run "make_geojson.py"
-        run: python my_script.py
+        run: python make_geojson.py
 
       - name: Test if if worked
         run: ls -la output/
+
+      - name: Check output existence
+        uses: thebinaryfelix/check-file-existence-action@v1
+        with:
+          files: 'output/airports_full_all_feet.geojson, output/airports_full_all_meter.geojson'
