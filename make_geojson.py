@@ -1,78 +1,14 @@
 import copy
-import gc
 import json
 import os
-import shutil
-import sys
 
+import commons
 import config
 
 
-def print_footer(message: str = "Goodbye :)", is_error: bool = False) -> None:
-    print("\033[36m-\033[94m===========================\033[36m-\033[39m")
-    if is_error:
-        print(f"\033[31m{message}\033[39m")
-    else:
-        print(message)
-    print("\033[36m-\033[94m===========================\033[36m-\033[39m")
-    print(" \033[96m\\_\\ \033[36m\\_\\             \033[36m/_/ \033[96m/_/\033[39m")
-
-
-if __name__ == "__main__":
-    # > Printing the logs header
-    print("          \033[36m_   \033[94m__  \033[36m_\033[39m")
-    print("     \033[96m_  \033[36m_// \033[94m/\\\\ \\ \033[36m\\\\_  \033[96m_\033[39m")
-    print("   \033[96m_// \033[36m/ / \033[94m/ /_\\ \\ \033[36m\\ \\ \033[96m\\\\_\033[39m")
-    print("  \033[96m/ / \033[36m/ / \033[94m/ ___\\\\ \\ \033[36m\\ \\ \033[96m\\ \\\033[39m")
-    print(" \033[96m/_/ \033[36m/_/ \033[94m/_/     \033[94m\\_\\ \033[36m\\_\\ \033[96m\\_\\\033[39m")
-    print("\033[36m-\033[94m===========================\033[36m-\033[39m")
-    print("  \033[36mTraefik Logs Preprocessor\033[39m")
-    print("\033[36m-\033[94m===========================\033[36m-\033[39m")
-
-    # Removing old output directory
-    if os.path.exists(config.OUTPUT_DIR):
-        print(f"Removing old build folder...")
-        if os.path.isdir(config.OUTPUT_DIR):
-            shutil.rmtree(config.OUTPUT_DIR)
-        else:
-            raise IOError(f"The output location '{config.OUTPUT_DIR}'is a file !")
-
-    # Creating new output directory
-    print(f"Preparing '{config.OUTPUT_DIR}'...")
-    os.mkdir(config.OUTPUT_DIR)
-
-    # Loading the JSON raw data file.
-    print(f"Loading '{config.INPUT_FILE}'...")
-    with open(config.INPUT_FILE, "rb") as f:
-        raw_data = json.loads(f.read().decode("utf-8"))
-    print(f"Loaded '{len(raw_data)}' airport(s) !")
-
-    # Validating the data
-    print(f"Validating & fixing the data...")
-    was_data_valid = True
-    for raw_airport_key, raw_airport_data in raw_data.items():
-        for required_field in ["icao", "iata", "name", "city", "state", "country", "elevation", "lat", "lon", "tz"]:
-            if not (required_field in raw_airport_data):
-                print(f"ERROR: Airport '{raw_airport_key}' is missing the '{required_field}' field !")
-                was_data_valid = False
-            if type(raw_airport_data[required_field]) is str:
-                if len(raw_airport_data[required_field]) == 0:
-                    raw_airport_data[required_field] = None
-        if raw_airport_data["icao"] is None and raw_airport_data["iata"] is None:
-            print(f"ERROR: Airport '{raw_airport_key}' is missing its ICAO and IATA codes !")
-            was_data_valid = False
-        if raw_airport_data["name"] is None:
-            print(f"ERROR: Airport '{raw_airport_key}' is missing its name !")
-            was_data_valid = False
-        if raw_airport_data["country"] is None:
-            print(f"ERROR: Airport '{raw_airport_key}' is missing its country code !")
-            was_data_valid = False
-    if not was_data_valid:
-        print_footer("Cannot continue, we have invalid data !", True)
-        sys.exit(1)
-
+def make_geojson(raw_data: dict):
     # Preparing the output data structure
-    print(f"Preparing the output structure...")
+    print("Preparing the output GeoJSON structure...")
     geojson_data_feet = {
         "type": "FeatureCollection",
         "features": list()
@@ -119,5 +55,20 @@ if __name__ == "__main__":
     # geojson_data_iata_feet = copy.deepcopy(geojson_data_feet)
     # geojson_data_iata_meter = copy.deepcopy(geojson_data_meters)
 
+
+if __name__ == "__main__":
+    # > Printing the logs header
+    commons.print_header("GeoJSON File Maker", 5)
+
+    # Preparing the output directory
+    commons.prepare_output(config.OUTPUT_DIR)
+
+    # Loading the JSON raw data file.
+    _raw_data = commons.get_clean_data(config.INPUT_FILE)
+
+    # Running the actual logic
+    print("\033[36m-\033[94m===========================\033[36m-\033[39m")
+    make_geojson(_raw_data)
+
     # Printing the logs footer
-    print_footer()
+    commons.print_footer()
