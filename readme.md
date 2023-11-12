@@ -1,4 +1,7 @@
-# Airport Location Data
+# GeoJSON Airport Data
+GeoJSON sets of 28k+ airports with ICAO/IATA codes, names, cities, two-letter country identifiers, elevation, latitude & longitude, and a timezone identifier.
+
+**This repo is entirely based on data provided by [mwgg/Airports](https://github.com/mwgg/Airports) !**
 
 ## Structure
 
@@ -29,9 +32,10 @@ All `.geojson` files use the following standard structure:
 }
 ```
 
-## Notes
-https://en.m.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_by_continent_(data_file)
-
+## Remarks
+All continent-based filtering is done using 
+[Wikipedia's list](https://en.m.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_by_continent_(data_file))
+that is itself based on `ISO 3166-1`.
 
 ## License
 The datasets provided by this repository is based on the dataset provided by
