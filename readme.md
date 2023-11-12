@@ -3,9 +3,20 @@ GeoJSON sets of 28k+ airports with ICAO/IATA codes, names, cities, two-letter co
 
 **This repo is entirely based on data provided by [mwgg/Airports](https://github.com/mwgg/Airports) !**
 
-## Structure
+## Downloading
+If you just want to download the files, just head over to the
+[release page](https://github.com/NibblePoker/Data-Airport-Location/releases).
 
-### GeoJSON
+## Running
+If you want to run this script yourself, you simply need to run the following commands:
+```shell
+git clone --recurse-submodules https://github.com/NibblePoker/Data-Airport-Location.git
+cd Data-Airport-Location
+python make_geojson.py
+```
+Your newly baked GeoJSON files should be in the `output/` folder.
+
+## GeoJSON Structure
 All `.geojson` files use the following standard structure:
 ```json
 {
@@ -33,7 +44,7 @@ All `.geojson` files use the following standard structure:
 ```
 
 ## Remarks
-All continent-based filtering is done using 
+All future continent-based filtering will be done using 
 [Wikipedia's list](https://en.m.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_by_continent_(data_file))
 that is itself based on `ISO 3166-1`.
 
