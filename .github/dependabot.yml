@@ -1,0 +1,8 @@
+version: 2
+
+updates:
+  # Checks daily if submodules were updated.
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "daily"
