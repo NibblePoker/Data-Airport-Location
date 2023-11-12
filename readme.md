@@ -1,5 +1,6 @@
-# GeoJSON Airport Data
-GeoJSON sets of 28k+ airports with ICAO/IATA codes, names, cities, two-letter country identifiers, elevation, latitude & longitude, and a timezone identifier.
+# GeoJSON & KML Airport Data
+GeoJSON & KML sets of 28k+ airports with ICAO/IATA codes, names, cities, two-letter country identifiers,
+elevation, latitude & longitude, and a timezone identifier.
 
 **This repo is entirely based on data provided by [mwgg/Airports](https://github.com/mwgg/Airports) !**
 
@@ -12,7 +13,8 @@ If you want to run this script yourself, you simply need to run the following co
 ```shell
 git clone --recurse-submodules https://github.com/NibblePoker/Data-Airport-Location.git
 cd Data-Airport-Location
-python make_geojson.py
+pip install -r requirements.txt
+python make_all.py
 ```
 Your newly baked GeoJSON files should be in the `output/` folder.
 
