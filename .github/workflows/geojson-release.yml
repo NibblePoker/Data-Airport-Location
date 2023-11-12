@@ -1,0 +1,65 @@
+name: Make & release GeoJSON
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  do-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: cicd-tests
+    steps:
+      - name: Checkout Git submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run "make_geojson.py"
+        run: python make_geojson.py
+
+      - name: Check output existence
+        uses: thebinaryfelix/check-file-existence-action@1.0.0
+        with:
+          files: 'output/airports_full_all_feet.geojson, output/airports_full_all_meter.geojson'
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release for ${{ github.ref_name }} @ ${{ github.sha }}
+          body: |
+            Automatic update release made through GitHub Actions.
+          draft: true
+          prerelease: false
+
+      - name: Upload asset `full_all_feet`
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/airports_full_all_feet.geojson
+          asset_name: airports_full_all_feet.geojson
+          asset_content_type: application/geo+json
+
+      - name: Upload asset `full_all_meter`
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/airports_full_all_meter.geojson
+          asset_name: airports_full_all_meter.geojson
+          asset_content_type: application/geo+json
