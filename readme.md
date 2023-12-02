@@ -13,6 +13,7 @@ If you want to run this script yourself, you simply need to run the following co
 ```shell
 git clone --recurse-submodules https://github.com/NibblePoker/Data-Airport-Location.git
 cd Data-Airport-Location
+git submodule update --recursive --remote
 pip install -r requirements.txt
 python make_all.py
 ```
